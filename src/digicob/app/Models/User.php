@@ -9,39 +9,49 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'users';
+
+    protected $primaryKey = 'userId';
+
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    public function userCompanies()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(UserCompany::class, 'userId');
+    }
+
+    public function domainCompanies()
+    {
+        return $this->hasMany(DomainCompany::class, 'userId');
+    }
+
+    public function governanceObjectCompanies()
+    {
+        return $this->hasMany(GovernanceObjectCompany::class, 'userId');
+    }
+
+    public function governancePracticeCompanies()
+    {
+        return $this->hasMany(GovernancePracticeCompany::class, 'userId');
+    }
+
+    public function activitiesCompanies()
+    {
+        return $this->hasMany(ActivitiesCompany::class, 'userId');
     }
 }

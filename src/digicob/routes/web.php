@@ -1,11 +1,37 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DomainController;
+use App\Http\Controllers\GovernanceObjectController;
+use App\Http\Controllers\GovernancePracticeController;
+use App\Http\Controllers\ActivitiesController;
+use App\Http\Controllers\AuditController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::redirect('/', '/dashboard');
+
+Route::middleware('auth')->group(function() {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/{company_id}', [CompanyController::class, 'index'])->name('company_home');
+
+    Route::get('/{company_id}/{domain_id}', [DomainController::class, 'index'])->name('domain_home');
+
+    Route::get('/{company_id}/{domain_id}/{gov_obj_id}', [GovernanceObjectController::class, 'index'])->name('governance_object_home');
+
+    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}', [GovernancePracticeController::class, 'index'])->name('governance_practice_home');
+
+    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/{activity_id}', [ActivitiesController::class, 'index'])->name('activities_home');
+
+    Route::get('{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'index'])->name('audit_home');
+
+    Route::get('{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit/{activity_id}', [AuditController::class, 'question'])->name('audit_question');
+
+    Route::post('{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'audit'])->name('audit_result');
 });
 
-Auth::routes();
+require __DIR__.'/auth.php';
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+require __DIR__.'/api.php';
+

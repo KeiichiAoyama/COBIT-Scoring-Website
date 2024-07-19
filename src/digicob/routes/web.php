@@ -11,7 +11,9 @@ use App\Http\Controllers\AuditController;
 
 Route::redirect('/', '/dashboard');
 
-Route::middleware('auth')->group(function() {
+Auth::routes(array(['register' => false, 'login' => false]));
+
+Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/{company_id}', [CompanyController::class, 'index'])->name('company_home');
@@ -24,11 +26,11 @@ Route::middleware('auth')->group(function() {
 
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/{activity_id}', [ActivitiesController::class, 'index'])->name('activities_home');
 
-    Route::get('{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'index'])->name('audit_home');
+    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'index'])->name('audit_home');
 
-    Route::get('{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit/{activity_id}', [AuditController::class, 'question'])->name('audit_question');
+    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit/{activity_id}', [AuditController::class, 'question'])->name('audit_question');
 
-    Route::post('{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'audit'])->name('audit_result');
+    Route::post('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'audit'])->name('audit_result');
 });
 
 require __DIR__.'/auth.php';

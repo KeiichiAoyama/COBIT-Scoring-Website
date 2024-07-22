@@ -28,7 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit/{activity_id}', [AuditController::class, 'question'])->name('audit_question');
 
-    Route::post('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'audit'])->name('audit_result');
+    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/result', [AuditController::class, 'result'])->name('audit_result');
 });
 
 require __DIR__.'/auth.php';

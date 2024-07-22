@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Company;
 use App\Models\DomainCompany;
 use App\Models\GovernanceObjectCompany;
 use App\Models\UserCompany;

@@ -34,7 +34,7 @@ class CompanyController extends Controller
 
         $governanceObjectCompanyList = GovernanceObjectCompany::where('userId', $user->userId)
             ->where('companyId', $companyId)
-            ->with('governanceobject')
+            ->with('governanceObject')
             ->get();
 
         return view('company', compact('userCompany', 'domainCompanyList', 'governanceObjectCompanyList'));

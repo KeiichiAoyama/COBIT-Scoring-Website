@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $companyIds = $userCompanyList->pluck('companyId');
 
         $domainCompanyList = DomainCompany::where('userId', $user->userId)
-            ->where('companyId', $companyIds)
+            ->whereIn('companyId', $companyIds)
             ->with('domain')
             ->get();
 

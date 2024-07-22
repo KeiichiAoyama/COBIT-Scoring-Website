@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\DomainCompany;
+use App\Models\GovernanceObjectCompany;
 use App\Models\UserCompany;
-use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
@@ -18,12 +19,25 @@ class CompanyController extends Controller
     {
         $user = auth()->user();
 
-        $company = Company::find($companyId);
-
-        $userCompany = UserCompany::where('companyId', $companyId)
-            ->where('userId', $user->userId)
+        $userCompany = UserCompany::where('userId', $user->userId)
+            ->where('companyId', $companyId)
+            ->with('company')
             ->first();
 
+        if(!$userCompany) {
+            return redirect()->back()->withErrors(['message' => 'Company not found.']);
+        }
 
+        $domainCompanyList = DomainCompany::where('userId', $user->userId)
+            ->where('companyId', $companyId)
+            ->with('domain')
+            ->get();
+
+        $governanceObjectCompanyList = GovernanceObjectCompany::where('userId', $user->userId)
+            ->where('companyId', $companyId)
+            ->with('governanceobject')
+            ->get();
+
+        return view('company', compact('userCompany', 'domainCompanyList', 'governanceObjectCompanyList'));
     }
 }

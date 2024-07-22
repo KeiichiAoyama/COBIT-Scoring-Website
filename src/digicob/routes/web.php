@@ -24,8 +24,6 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}', [GovernancePracticeController::class, 'index'])->name('governance_practice_home');
 
-    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/{activity_id}', [ActivitiesController::class, 'index'])->name('activities_home');
-
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'index'])->name('audit_home');
 
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit/{activity_id}', [AuditController::class, 'question'])->name('audit_question');

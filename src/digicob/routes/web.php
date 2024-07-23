@@ -6,7 +6,6 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\GovernanceObjectController;
 use App\Http\Controllers\GovernancePracticeController;
-use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\AuditController;
 
 Route::redirect('/', '/dashboard');

@@ -11,7 +11,7 @@ use App\Http\Controllers\AuditController;
 Route::redirect('/', '/dashboard');
 
 Route::get('/home', function () {
-    return view('more-detail-5');
+    return view('more-detail-3');
 });
 
 Auth::routes(array(['register' => false, 'login' => false]));

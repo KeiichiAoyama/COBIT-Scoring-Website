@@ -10,6 +10,10 @@ use App\Http\Controllers\AuditController;
 
 Route::redirect('/', '/dashboard');
 
+Route::get('/home', function () {
+    return view('more-detail-5');
+});
+
 Auth::routes(array(['register' => false, 'login' => false]));
 
 Route::middleware(['auth', 'verified'])->group(function() {

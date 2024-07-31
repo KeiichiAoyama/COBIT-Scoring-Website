@@ -9,6 +9,8 @@ class GovernancePracticeCompany extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
     protected $table = 'governancePracticeCompany';
 
     protected $primaryKey = 'governancePracticeCompanyId';

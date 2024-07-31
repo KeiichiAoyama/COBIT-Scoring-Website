@@ -9,6 +9,8 @@ class Domain extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
     protected $table = 'domain';
 
     protected $primaryKey = 'domainId';

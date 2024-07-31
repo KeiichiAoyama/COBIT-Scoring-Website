@@ -39,7 +39,7 @@ class GovernanceObjectController extends Controller
 
         $governancePracticeCompanyList = GovernancePracticeCompany::where('userId', $user->userId)
             ->where('companyId', $companyId)
-            ->where('governanceObjectCompanyId', $governanceObjectCompany->governanceObjectId)
+            ->where('governanceObjectCompanyId', $governanceObjectCompany->governanceObjectCompanyId)
             ->with('governancePractice')
             ->get();
 

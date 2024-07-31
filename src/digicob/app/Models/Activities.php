@@ -9,9 +9,15 @@ class Activities extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'activities';
 
     protected $primaryKey = 'activitiesId';
+
+    public $incrementing = false; // jika primary key bukan auto increment
+    
+    protected $keyType = 'string'; // jika primary key tipe string
 
     protected $fillable = [
         'activitiesName',

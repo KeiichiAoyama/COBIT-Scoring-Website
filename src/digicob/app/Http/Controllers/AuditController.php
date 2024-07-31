@@ -41,7 +41,13 @@ class AuditController extends Controller
             return redirect()->back()->withErrors(['message' => 'Governance Practice not found.']);
         }
 
-        return view('audit.home', compact('userCompany', 'governancePracticeCompany'));
+        $activitiesCompany = ActivitiesCompany::where('userId', $user->userId)
+            ->where('companyId', $companyId)
+            ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
+            ->with('activities')
+            ->first();
+
+        return view('audit', compact('userCompany', 'governancePracticeCompany','domainId','activitiesCompany'));
     }
 
     public function question($companyId, $domainId, $governanceObjectId, $governancePracticeId, $activitiesId)
@@ -77,7 +83,7 @@ class AuditController extends Controller
             return redirect()->back()->withErrors(['message' => 'Activity not found.']);
         }
 
-        return view('audit.question', compact('userCompany', 'governancePracticeCompany', 'activitiesCompany'));
+        return view('questions', compact('userCompany', 'governancePracticeCompany', 'activitiesCompany'));
     }
 
     public function saveAuditNext(Request $request)

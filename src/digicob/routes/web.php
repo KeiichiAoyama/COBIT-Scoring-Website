@@ -1,23 +1,28 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GovernanceObjectController;
 use App\Http\Controllers\GovernancePracticeController;
-use App\Http\Controllers\AuditController;
 
-Route::redirect('/', '/dashboard');
+Route::redirect('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/home', function () {
-    return view('more-detail-3');
+    return view('new-company');
 });
+
+
 
 Auth::routes(array(['register' => false, 'login' => false]));
 
 Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/newCompany', [DashboardController::class, 'newCompany'])->name('newCompany');
+    Route::post('/dashboard/newCompany/save', [DashboardController::class, 'addNewCompany'])->name('addNewCompany');
 
     Route::get('/{company_id}', [CompanyController::class, 'index'])->name('company_home');
 

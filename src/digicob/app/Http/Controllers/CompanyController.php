@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\DomainCompany;
-use App\Models\GovernanceObjectCompany;
+use App\Models\Company;
 use App\Models\UserCompany;
+use App\Models\DomainCompany;
+use App\Http\Controllers\Controller;
+use App\Models\GovernanceObjectCompany;
 
 class CompanyController extends Controller
 {

@@ -42,7 +42,7 @@ class GovernancePracticeController extends Controller
             ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
             ->with('activities')
             ->get();
-
-        return view('governancePractice', compact('userCompany', 'governancePracticeCompany', 'activitiesCompanyList'));
+            
+        return view('governancePractice', compact('userCompany', 'governancePracticeCompany', 'domainId', 'activitiesCompanyList'));
     }
 }

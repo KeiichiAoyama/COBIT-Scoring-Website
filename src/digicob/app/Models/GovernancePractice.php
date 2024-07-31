@@ -9,9 +9,15 @@ class GovernancePractice extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
     protected $table = 'governancePractice';
 
     protected $primaryKey = 'governancePracticeId';
+
+    public $incrementing = false; // jika primary key bukan auto increment
+    
+    protected $keyType = 'string'; // jika primary key tipe string
 
     protected $fillable = [
         'governancePracticeName',

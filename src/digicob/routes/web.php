@@ -9,13 +9,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GovernanceObjectController;
 use App\Http\Controllers\GovernancePracticeController;
 
-Route::redirect('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::redirect('/', '/dashboard')->name('dashboard');
 
 Route::get('/home', function () {
     return view('new-company');
 });
-
-
 
 Auth::routes(array(['register' => false, 'login' => false]));
 

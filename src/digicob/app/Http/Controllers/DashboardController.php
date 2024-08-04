@@ -54,14 +54,14 @@ class DashboardController extends Controller
             'companyAddress' => 'required|string|max:255',
         ]);
 
-        
+
         $user = auth()->user();
-        
+
         $company = Company::where('companyName', $validated['companyName'])
         ->where('companyIndustry', $validated['companyIndustry'])
         ->where('companyAddress', $validated['companyAddress'])
         ->first();
-        
+
         if(!$company){
             $company = new Company();
             $company->companyName = $validated['companyName'];
@@ -69,33 +69,33 @@ class DashboardController extends Controller
             $company->companyAddress = $validated['companyAddress'];
             $company->save();
         }
-        
+
         $userCompany = UserCompany::where('userId', $user->userId)
         ->where('companyId', $company->companyId)
         ->first();
-        
+
         if($userCompany){
             return response()->json(['message' => 'Company already exists.'], 409);
         }
-        
+
         $userCompany = new UserCompany();
         $userCompany->userId = $user->userId;
         $userCompany->companyId = $company->companyId;
         $userCompany->userCompanyScore = 0.0;
         $userCompany->save();
-        
+
         $domains = Domain::all();
         $governanceObjects = GovernanceObject::all();
         $governancePractices = GovernancePractice::all();
         $activities = Activities::all();
-        
+
         foreach ($domains as $domain) {
             $domainCompany = new DomainCompany();
             $domainCompany->userId = $user->userId;
             $domainCompany->companyId = $company->companyId;
             $domainCompany->domainId = $domain->domainId;
             $domainCompany->save();
-            
+
             foreach ($governanceObjects as $governanceObject) {
                 $governanceObjectCompany = new GovernanceObjectCompany();
                 $governanceObjectCompany->userId = $user->userId;
@@ -103,7 +103,7 @@ class DashboardController extends Controller
                 $governanceObjectCompany->domainCompanyId = $domainCompany->domainCompanyId;
                 $governanceObjectCompany->governanceObjectId = $governanceObject->governanceObjectId;
                 $governanceObjectCompany->save();
-                
+
                 foreach ($governancePractices as $governancePractice) {
                     $governancePracticeCompany = new GovernancePracticeCompany();
                     $governancePracticeCompany->userId = $user->userId;
@@ -111,7 +111,7 @@ class DashboardController extends Controller
                     $governancePracticeCompany->governanceObjectCompanyId = $governanceObjectCompany->governanceObjectCompanyId;
                     $governancePracticeCompany->governancePracticeId = $governancePractice->governancePracticeId;
                     $governancePracticeCompany->save();
-                    
+
                     foreach ($activities as $activity) {
                     if (strpos($activity->governancePracticeId, $governancePractice->governancePracticeId) === 0) {
                         $activitiesCompany = new ActivitiesCompany();
@@ -125,7 +125,7 @@ class DashboardController extends Controller
                 }
             }
         }
-        
-        return response()->json(['message' => 'Company has been added successfully.'], 201);
+
+        return redirect()->route('dashboard')->with('success', 'Company has been added successfully.');
     }
 }

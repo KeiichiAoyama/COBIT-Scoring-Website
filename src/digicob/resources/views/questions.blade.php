@@ -30,6 +30,8 @@
                                                 value="{{ request()->route('domain_id') }}">
                                             <input type="hidden" name="governanceObjectId"
                                                 value="{{ request()->route('gov_obj_id') }}">
+                                            <input type="hidden" name="governancePracticeId"
+                                                value="{{ request()->route('gov_prac_id') }}">
                                             <div class="row">
                                                 <div class="col-4">
                                                     <input type="hidden" id="activitiesCompanyId"

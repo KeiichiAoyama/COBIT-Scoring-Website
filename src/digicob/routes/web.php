@@ -32,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit', [AuditController::class, 'index'])->name('audit_home');
 
-    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit/{activity_id}', [AuditController::class, 'question'])->name('audit_question');
+    Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/audit/{activity_id?}', [AuditController::class, 'question'])->name('audit_question');
 
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/result', [AuditController::class, 'result'])->name('audit_result');
 });

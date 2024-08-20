@@ -51,7 +51,7 @@ class AuditController extends Controller
         return view('audit', compact('userCompany', 'governancePracticeCompany', 'domainId', 'activitiesCompany'));
     }
 
-    public function question($companyId, $domainId, $governanceObjectId, $governancePracticeId, $activitiesId)
+    public function question($companyId, $domainId, $governanceObjectId, $governancePracticeId)
     {
         $user = auth()->user();
 
@@ -76,43 +76,26 @@ class AuditController extends Controller
             return redirect()->back()->withErrors(['message' => 'Governance Practice not found.']);
         }
 
-        if ($activitiesId === 'start') {
-            // Find the first activity
-            $activitiesCompany = ActivitiesCompany::where('userId', $user->userId)
-                ->where('companyId', $companyId)
-                ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
-                ->orderBy('activitiesCompanyId', 'asc')
-                ->first();
+        // Always find the first activity within the specific governance practice
+        $activitiesCompany = ActivitiesCompany::where('userId', $user->userId)
+            ->where('companyId', $companyId)
+            ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
+            ->with('activities')  // Eager load the activities relationship
+            ->orderBy('activitiesCompanyId', 'asc')
+            ->first();
 
-            if (!$activitiesCompany) {
-                return redirect()->back()->withErrors(['message' => 'No activities found.']);
-            }
-        } else {
-            // Find the specific activity
-            $activitiesCompany = ActivitiesCompany::where('activitiesId', $activitiesId)
-                ->where('userId', $user->userId)
-                ->where('companyId', $companyId)
-                ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
-                ->first();
-
-            if (!$activitiesCompany) {
-                return redirect()->back()->withErrors(['message' => 'Activity not found.']);
-            }
+        if (!$activitiesCompany) {
+            return redirect()->back()->withErrors(['message' => 'No activities found.']);
         }
-
-        // Log the data
-        Log::info('User Company Data:', ['userCompany' => $userCompany]);
-        Log::info('Governance Practice Company Data:', ['governancePracticeCompany' => $governancePracticeCompany]);
-        Log::info('Current Activities Company Data:', ['activitiesCompany' => $activitiesCompany]);
 
         // Return the view with the data
         return view('questions', [
             'userCompany' => $userCompany,
             'governancePracticeCompany' => $governancePracticeCompany,
             'activitiesCompany' => $activitiesCompany,
-            'isStart' => $activitiesId === 'start', // Add flag to indicate if it's the start
         ]);
     }
+
 
     public function saveAuditNext(Request $request)
     {
@@ -137,32 +120,24 @@ class AuditController extends Controller
         }
 
         // Update the current ActivitiesCompany record
-        $activitiesCompany->update([
-            'activitiesCompanyScore' => $validated['activitiesCompanyScore'],
-            'activitiesCompanyFindings' => $validated['activitiesCompanyFindings'],
-            'activitiesCompanyImpact' => $validated['activitiesCompanyImpact'],
-            'activitiesCompanyRecommendations' => $validated['activitiesCompanyRecommendations'],
-            'activitiesCompanyResponse' => $validated['activitiesCompanyResponse'],
-            'activitiesCompanyStatus' => $validated['activitiesCompanyStatus'],
-            'activitiesCompanyDeadline' => $validated['activitiesCompanyDeadline'],
-            'activitiesCompanyPersonInCharge' => $validated['activitiesCompanyPersonInCharge'],
-        ]);
+        $activitiesCompany->update($validated);
 
         // Find the next ActivitiesCompany record
         $nextActivitiesCompany = ActivitiesCompany::where('userId', $activitiesCompany->userId)
             ->where('companyId', $activitiesCompany->companyId)
             ->where('governancePracticeCompanyId', $activitiesCompany->governancePracticeCompanyId)
             ->where('activitiesCompanyId', '>', $activitiesCompany->activitiesCompanyId)
+            ->with('activities')
             ->orderBy('activitiesCompanyId', 'asc')
             ->first();
 
         if ($nextActivitiesCompany) {
-            // Retrieve related data
+            // Retrieve related data for the next question view
             $user = auth()->user();
             $companyId = $nextActivitiesCompany->companyId;
             $domainId = $request->input('domainId');
             $governanceObjectId = $request->input('governanceObjectId');
-            $governancePracticeId = $nextActivitiesCompany->governancePracticeCompanyId;
+            $governancePracticeId = $activitiesCompany->governancePracticeCompanyId;
 
             $userCompany = UserCompany::where('userId', $user->userId)
                 ->where('companyId', $companyId)
@@ -175,18 +150,11 @@ class AuditController extends Controller
                 ->with('governancePractice')
                 ->first();
 
-            // Log the data
-            Log::info('User Company Data:', ['userCompany' => $userCompany]);
-            Log::info('Governance Practice Company Data:', ['governancePracticeCompany' => $governancePracticeCompany]);
-            Log::info('Next Activities Company Data:', ['activitiesCompany' => $nextActivitiesCompany]);
-
-            // Redirect to the new route with parameters
-            return redirect()->route('audit_question', [
-                'company_id' => $companyId,
-                'domain_id' => $domainId,
-                'gov_obj_id' => $governanceObjectId,
-                'gov_prac_id' => $governancePracticeId,
-                'activity_id' => $nextActivitiesCompany->activitiesCompanyId,
+            // Return the view with the data for the next activity
+            return response()->json([
+                'userCompany' => $userCompany,
+                'governancePracticeCompany' => $governancePracticeCompany,
+                'activitiesCompany' => $nextActivitiesCompany,
             ]);
         } else {
             // Handle the case where there are no more activities

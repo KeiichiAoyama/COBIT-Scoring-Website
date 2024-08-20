@@ -26,7 +26,7 @@
                     </div>
                     <div class="row mt-2">
                       @php
-                        $startUrl = url('/' . $governancePracticeCompany->companyId . '/' . $domainId . '/' . $governancePracticeCompany->governancePractice->governanceObjectId . '/' . $governancePracticeCompany->governancePracticeId . '/audit/start');
+                        $startUrl = url('/' . $governancePracticeCompany->companyId . '/' . $domainId . '/' . $governancePracticeCompany->governancePractice->governanceObjectId . '/' . $governancePracticeCompany->governancePracticeId . '/audit/question');
                       @endphp
                       <a href="{{ $startUrl }}" class="btn btn-primary w-100">
                         Start

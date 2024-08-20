@@ -19,12 +19,10 @@
                                         <h3 class="fw-semibold mt-1">{{ $userCompany->company->companyName }}</h3>
                                     </div>
                                     <div class="col">
-                                        <h4>{{$governancePracticeCompany->governancePractice->governancePracticeId}}
+                                        <h4 id="activitiesQuestion">
+                                            {{ $activitiesCompany->activities->activitiesQuestion }}
                                         </h4>
-                                        <p>{{$governancePracticeCompany->governancePractice->governancePracticeName}}
-                                        </p>
-                                        <h4>{{ $activitiesCompany->activities->activitiesQuestion }}</h4>
-                                        <form action="{{ url('/save-audit-next') }}" method="POST">
+                                        <form id="saveAuditForm">
                                             @csrf
                                             <input type="hidden" name="domainId"
                                                 value="{{ request()->route('domain_id') }}">
@@ -32,12 +30,11 @@
                                                 value="{{ request()->route('gov_obj_id') }}">
                                             <input type="hidden" name="governancePracticeId"
                                                 value="{{ request()->route('gov_prac_id') }}">
+                                            <input type="hidden" id="activitiesCompanyId" name="activitiesCompanyId"
+                                                value="{{ $activitiesCompany->activitiesCompanyId }}" required />
+
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <input type="hidden" id="activitiesCompanyId"
-                                                        name="activitiesCompanyId"
-                                                        value="{{ $activitiesCompany->activitiesCompanyId }}"
-                                                        required />
                                                     <input type="text" class="form-control" id="activitiesCompanyScore"
                                                         name="activitiesCompanyScore" value="" required />
                                                 </div>
@@ -87,7 +84,8 @@
                                             <div
                                                 class="row d-sm-flex d-block align-items-center justify-content-end mt-5">
                                                 <div class="col-2">
-                                                    <button type="submit" class="btn btn-primary w-100">Next</button>
+                                                    <button type="button" id="nextButton"
+                                                        class="btn btn-primary w-100">Next</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -102,19 +100,39 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const scoreInput = document.getElementById('activitiesCompanyScore');
+        const activityId = document.getElementById('activitiesCompanyId');
         const additionalFields = document.getElementById('additional-fields');
+        const nextButton = document.getElementById('nextButton');
+        const activitiesQuestion = document.getElementById('activitiesQuestion');
+        const form = document.getElementById('saveAuditForm');
 
         scoreInput.addEventListener('input', function () {
             const score = parseFloat(scoreInput.value);
+            additionalFields.style.display = !isNaN(score) && score < 85 ? 'block' : 'none';
+        });
 
-            if (!isNaN(score) && score < 85) {
-                additionalFields.style.display = 'block';
-            } else {
-                additionalFields.style.display = 'none';
-            }
+        nextButton.addEventListener('click', function () {
+            const formData = new FormData(form);
+            axios.post('{{ url('/save-audit-next') }}', formData)
+                .then(response => {
+                    console.log(response.data);
+                    if (response.data.activitiesCompany) {
+                        activitiesQuestion.textContent = response.data.activitiesCompany.activities.activitiesQuestion;
+                        activityId.value = response.data.activitiesCompany.activitiesCompanyId;
+                    }
+                    if (response.data.redirect) {
+                        window.location.href = response.data.redirect;
+                    }
+
+                    scoreInput.value = null;
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
         });
     });
 </script>

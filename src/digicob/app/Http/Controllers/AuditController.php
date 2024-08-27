@@ -99,7 +99,6 @@ class AuditController extends Controller
 
     public function saveAuditNext(Request $request)
     {
-        // Validate the request
         $validated = $request->validate([
             'activitiesCompanyId' => 'required|string|max:255',
             'activitiesCompanyScore' => 'required|integer',
@@ -112,17 +111,14 @@ class AuditController extends Controller
             'activitiesCompanyPersonInCharge' => 'nullable|string|max:255',
         ]);
 
-        // Find the current ActivitiesCompany record
         $activitiesCompany = ActivitiesCompany::where('activitiesCompanyId', $validated['activitiesCompanyId'])->first();
 
         if (!$activitiesCompany) {
             return redirect()->back()->withErrors(['message' => 'Activity not found.']);
         }
 
-        // Update the current ActivitiesCompany record
         $activitiesCompany->update($validated);
 
-        // Find the next ActivitiesCompany record
         $nextActivitiesCompany = ActivitiesCompany::where('userId', $activitiesCompany->userId)
             ->where('companyId', $activitiesCompany->companyId)
             ->where('governancePracticeCompanyId', $activitiesCompany->governancePracticeCompanyId)
@@ -132,7 +128,6 @@ class AuditController extends Controller
             ->first();
 
         if ($nextActivitiesCompany) {
-            // Retrieve related data for the next question view
             $user = auth()->user();
             $companyId = $nextActivitiesCompany->companyId;
             $domainId = $request->input('domainId');
@@ -150,14 +145,12 @@ class AuditController extends Controller
                 ->with('governancePractice')
                 ->first();
 
-            // Return the view with the data for the next activity
             return response()->json([
                 'userCompany' => $userCompany,
                 'governancePracticeCompany' => $governancePracticeCompany,
                 'activitiesCompany' => $nextActivitiesCompany,
             ]);
         } else {
-            // Handle the case where there are no more activities
             return redirect()->route('audit_result', [
                 'company_id' => $activitiesCompany->companyId,
                 'domain_id' => $request->input('domainId'),

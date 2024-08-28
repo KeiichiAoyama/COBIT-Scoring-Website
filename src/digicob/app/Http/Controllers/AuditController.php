@@ -55,7 +55,6 @@ class AuditController extends Controller
     {
         $user = auth()->user();
 
-        // Retrieve the user company
         $userCompany = UserCompany::where('userId', $user->userId)
             ->where('companyId', $companyId)
             ->with('company')
@@ -65,7 +64,6 @@ class AuditController extends Controller
             return redirect()->back()->withErrors(['message' => 'Company not found.']);
         }
 
-        // Retrieve the governance practice company
         $governancePracticeCompany = GovernancePracticeCompany::where('userId', $user->userId)
             ->where('companyId', $companyId)
             ->where('governancePracticeId', $governancePracticeId)
@@ -76,11 +74,10 @@ class AuditController extends Controller
             return redirect()->back()->withErrors(['message' => 'Governance Practice not found.']);
         }
 
-        // Always find the first activity within the specific governance practice
         $activitiesCompany = ActivitiesCompany::where('userId', $user->userId)
             ->where('companyId', $companyId)
             ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
-            ->with('activities')  // Eager load the activities relationship
+            ->with('activities')
             ->orderBy('activitiesCompanyId', 'asc')
             ->first();
 
@@ -88,7 +85,6 @@ class AuditController extends Controller
             return redirect()->back()->withErrors(['message' => 'No activities found.']);
         }
 
-        // Return the view with the data
         return view('questions', [
             'userCompany' => $userCompany,
             'governancePracticeCompany' => $governancePracticeCompany,
@@ -149,14 +145,19 @@ class AuditController extends Controller
                 'userCompany' => $userCompany,
                 'governancePracticeCompany' => $governancePracticeCompany,
                 'activitiesCompany' => $nextActivitiesCompany,
+                'message' => 'next',
             ]);
         } else {
-            return redirect()->route('audit_result', [
+            $governancePracticeId = GovernancePracticeCompany::where('governancePracticeCompanyId', $activitiesCompany->governancePracticeCompanyId)
+                ->value('governancePracticeId');
+
+            return response()->json([
                 'company_id' => $activitiesCompany->companyId,
                 'domain_id' => $request->input('domainId'),
                 'gov_obj_id' => $request->input('governanceObjectId'),
-                'gov_prac_id' => $activitiesCompany->governancePracticeCompanyId,
-            ])->with('message', 'All activities completed.');
+                'gov_prac_id' => $governancePracticeId,
+                'message' => 'final',
+            ]);
         }
     }
 

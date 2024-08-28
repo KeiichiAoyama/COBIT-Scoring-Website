@@ -120,15 +120,27 @@
             axios.post('{{ url('/save-audit-next') }}', formData)
                 .then(response => {
                     console.log(response.data);
-                    if (response.data.activitiesCompany) {
-                        activitiesQuestion.textContent = response.data.activitiesCompany.activities.activitiesQuestion;
-                        activityId.value = response.data.activitiesCompany.activitiesCompanyId;
-                    }
-                    if (response.data.redirect) {
-                        window.location.href = response.data.redirect;
+                    if (response.data.message == 'next') {
+                        if (response.data.activitiesCompany) {
+                            activitiesQuestion.textContent = response.data.activitiesCompany.activities.activitiesQuestion;
+                            activityId.value = response.data.activitiesCompany.activitiesCompanyId;
+                        }
+                        if (response.data.redirect) {
+                            window.location.href = response.data.redirect;
+                        }
+
+                        scoreInput.value = null;
                     }
 
-                    scoreInput.value = null;
+                    if (response.data.message == 'final') {
+                        const companyId = response.data.company_id;
+                        const domainId = response.data.domain_id;
+                        const governanceObjectId = response.data.gov_obj_id;
+                        const governancePracticeCompanyId = response.data.gov_prac_id;
+
+                        const url = `/${companyId}/${domainId}/${governanceObjectId}/${governancePracticeCompanyId}/result`;
+                        window.location.href = url;
+                    }
                 })
                 .catch(error => {
                     console.error('There was an error!', error);

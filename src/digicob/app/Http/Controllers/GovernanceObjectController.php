@@ -31,6 +31,7 @@ class GovernanceObjectController extends Controller
             ->where('companyId', $companyId)
             ->where('governanceObjectId', $governanceObjectId)
             ->with('governanceObject')
+            ->with('domainCompany')
             ->first();
 
         if(!$governanceObjectCompany) {

@@ -31,18 +31,21 @@ class GovernancePracticeController extends Controller
             ->where('companyId', $companyId)
             ->where('governancePracticeId', $governancePracticeId)
             ->with('governancePractice')
+            ->with(['governancePractice', 'governanceObjectCompany.domainCompany'])
             ->first();
 
         if(!$governancePracticeCompany) {
             return redirect()->back()->withErrors(['message' => 'Governance Practice not found.']);
         }
 
+
+
         $activitiesCompanyList = ActivitiesCompany::where('userId', $user->userId)
             ->where('companyId', $companyId)
             ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
             ->with('activities')
             ->get();
-            
+
         return view('governancePractice', compact('userCompany', 'governancePracticeCompany', 'domainId', 'activitiesCompanyList'));
     }
 }

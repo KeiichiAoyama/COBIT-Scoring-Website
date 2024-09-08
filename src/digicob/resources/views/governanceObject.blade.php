@@ -5,7 +5,9 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <a href="{{ url()->previous() }}" class="btn btn-outline-primary">Back</a>
+                    <a href="{{ url('/' . $governanceObjectCompany->companyId . '/' . $governanceObjectCompany->domainCompany->domainId) }}"
+                        class="btn btn-outline-primary">Back</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-primary">Home</a>
                 </div>
             </div>
             <div class="row mt-4">
@@ -15,6 +17,7 @@
                             <div class="d-sm-flex d-block align-items-center justify-content-between">
                                 <div class="mb-3 mb-sm-0">
                                     <div class="row">
+                                        <h3 class="fw-semibold text-start" style="margin-bottom: 40px;">Governance Object</h3>
                                         <div class="col-2">
                                             <img src="{{ asset('images/google.png')}}" alt="" style="width: 100px" />
                                             <h3 class="fw-semibold mt-1">{{ $userCompany->company->companyName}}</h3>
@@ -35,9 +38,8 @@
                                 <div class="mb-sm-0">
                                     @php
                                         $score = $governanceObjectCompany->governanceObjectCompanyScore;
-                                        $percentScore = $score * 100;
                                     @endphp
-                                    <div class="circle-utama">{{ number_format($percentScore, 2) }}%</div>
+                                    <div class="circle-utama">{{ number_format($score, 2) }}%</div>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +48,7 @@
                         <div class="row">
                             <div class="col-lg align-items-strech">
                                 <a
-                                    href="{{ url('/' . $governanceObjectCompany->companyId . '/' . $governanceObjectCompany->domainCompanyId . '/' . $governanceObjectCompany->governanceObjectId . '/' . $governancePractice->governancePracticeId)}}">
+                                    href="{{ url('/' . $governanceObjectCompany->companyId . '/' . $governanceObjectCompany->domainCompany->domainId . '/' . $governanceObjectCompany->governanceObjectId . '/' . $governancePractice->governancePracticeId)}}">
                                     <div class="card w-100">
                                         <div class="card-body">
                                             <div class="row d-flex align-items-center">
@@ -59,8 +61,6 @@
                                                                     {{ $governancePractice->governancePractice->governancePracticeName}}
                                                                 </h3>
                                                             </div>
-                                                            <h3>{{ $governancePractice->governancePracticeCompanyLevel ?? 'Level'}}
-                                                            </h3>
                                                         </div>
                                                     </div>
                                                 </div>

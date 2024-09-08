@@ -36,6 +36,7 @@ class AuditController extends Controller
             ->where('companyId', $companyId)
             ->where('governancePracticeId', $governancePracticeId)
             ->with('governancePractice')
+            ->with(['governancePractice', 'governanceObjectCompany.domainCompany'])
             ->first();
 
         if (!$governancePracticeCompany) {
@@ -68,6 +69,7 @@ class AuditController extends Controller
             ->where('companyId', $companyId)
             ->where('governancePracticeId', $governancePracticeId)
             ->with('governancePractice')
+            ->with(['governancePractice', 'governanceObjectCompany.domainCompany'])
             ->first();
 
         if (!$governancePracticeCompany) {
@@ -91,8 +93,6 @@ class AuditController extends Controller
             'activitiesCompany' => $activitiesCompany,
         ]);
     }
-
-
     public function saveAuditNext(Request $request)
     {
         $validated = $request->validate([
@@ -160,9 +160,9 @@ class AuditController extends Controller
             ]);
         }
     }
-
     public function result($companyId, $domainId, $governanceObjectId, $governancePracticeId)
     {
+
         $user = auth()->user();
 
         $userCompany = UserCompany::where('userId', $user->userId)
@@ -171,6 +171,7 @@ class AuditController extends Controller
             ->first();
 
         if (!$userCompany) {
+            Log::info("fail 1");
             return redirect()->back()->withErrors(['message' => 'Company not found.']);
         }
 
@@ -181,6 +182,7 @@ class AuditController extends Controller
             ->first();
 
         if (!$domainCompany) {
+            Log::info("fail 2");
             return redirect()->back()->withErrors(['message' => 'Domain not found.']);
         }
 
@@ -191,6 +193,7 @@ class AuditController extends Controller
             ->first();
 
         if (!$governanceObjectCompany) {
+            Log::info("fail 3");
             return redirect()->back()->withErrors(['message' => 'Governance Object not found.']);
         }
 
@@ -201,6 +204,7 @@ class AuditController extends Controller
             ->first();
 
         if (!$governancePracticeCompany) {
+            Log::info("fail 4");
             return redirect()->back()->withErrors(['message' => 'Governance Practice not found.']);
         }
 
@@ -208,10 +212,37 @@ class AuditController extends Controller
             ->where('companyId', $companyId)
             ->where('governancePracticeCompanyId', $governancePracticeCompany->governancePracticeCompanyId)
             ->with('activities')
-            ->avg('activities_company_score');
+            ->avg('activitiesCompanyScore');
 
         Controller::updateAverage($userCompany, $domainCompany, $governanceObjectCompany, $governancePracticeCompany, $averageActivityScore);
 
-        return view('audit.result', compact('userCompany', 'domainCompany', 'governanceObjectCompany', 'governancePracticeCompany', 'averageActivityScore'));
+        return view('result', compact('userCompany', 'domainCompany', 'governanceObjectCompany', 'governancePracticeCompany', 'averageActivityScore'));
+    }
+
+    public function updateExtra(Request $request)
+    {
+        $request->validate([
+            'activitiesCompanyId' => 'required|integer',
+            'activitiesCompanyFindings' => 'nullable|string',
+            'activitiesCompanyImpact' => 'nullable|string',
+            'activitiesCompanyRecommendations' => 'nullable|string',
+            'activitiesCompanyResponse' => 'nullable|string',
+            'activitiesCompanyStatus' => 'nullable|string',
+            'activitiesCompanyDeadline' => 'nullable|date',
+            'activitiesCompanyPersonInCharge' => 'nullable|string',
+        ]);
+
+        $activitiesCompany = ActivitiesCompany::where('activitiesCompanyId', $request->input('activitiesCompanyId'))->first();
+        $activitiesCompany->update([
+            'activitiesCompanyFindings' => $request->input('activitiesCompanyFindings'),
+            'activitiesCompanyImpact' => $request->input('activitiesCompanyImpact'),
+            'activitiesCompanyRecommendations' => $request->input('activitiesCompanyRecommendations'),
+            'activitiesCompanyResponse' => $request->input('activitiesCompanyResponse'),
+            'activitiesCompanyStatus' => $request->input('activitiesCompanyStatus'),
+            'activitiesCompanyDeadline' => $request->input('activitiesCompanyDeadline'),
+            'activitiesCompanyPersonInCharge' => $request->input('activitiesCompanyPersonInCharge'),
+        ]);
+
+        return redirect()->back()->with('success', 'Data updated successfully');
     }
 }

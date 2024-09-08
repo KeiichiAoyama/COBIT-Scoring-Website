@@ -19,9 +19,8 @@ class Controller extends BaseController
         $userId = $userCompany->userId;
         $companyId = $userCompany->companyId;
 
-        $maxLevel = GovernancePractice::select('governancePracticeAvailableLevels')
-            ->where('governancePracticeId', $governancePracticeCompany->governancePracticeId)
-            ->first();
+        $maxLevel = GovernancePractice::where('governancePracticeId', $governancePracticeCompany->governancePracticeId)
+            ->value('governancePracticeAvailableLevels');
 
         $governancePracticeCompany->governancePracticeCompanyScore = $averageActivityScore;
         $governancePracticeCompany->governancePracticeCompanyLevel = $this->updateLevel($averageActivityScore, $governancePracticeCompany->governancePracticeCompanyLevel, $maxLevel);
@@ -73,7 +72,7 @@ class Controller extends BaseController
                     break;
             }
 
-            if($newLevel > $level){
+            if($newLevel > $maxLevel){
                 $newLevel = $level;
             }
 

@@ -10,7 +10,7 @@ class ActivitiesCompany extends Model
     use HasFactory;
 
     public $timestamps = false;
-    
+
     protected $table = 'activitiesCompany';
 
     protected $primaryKey = 'activitiesCompanyId';

@@ -5,7 +5,9 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <button class="btn btn-outline-primary">Back</button>
+                    <a href="{{ url('/' . $governancePracticeCompany->companyId . '/' . $governancePracticeCompany->governanceObjectCompany->domainCompany->domainId . '/' . $governancePracticeCompany->governanceObjectCompany->governanceObjectId . '/' . $governancePracticeCompany->governancePracticeId . '/audit') }}"
+                        class="btn btn-outline-primary">Back</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-primary">Home</a>
                 </div>
             </div>
             <div class="row mt-4">
@@ -130,6 +132,16 @@
                         }
 
                         scoreInput.value = null;
+
+                        document.getElementById('activitiesCompanyFindings').value = '';
+                        document.getElementById('activitiesCompanyImpact').value = '';
+                        document.getElementById('activitiesCompanyRecommendations').value = '';
+                        document.getElementById('activitiesCompanyResponse').value = '';
+                        document.getElementById('activitiesCompanyStatus').value = '';
+                        document.getElementById('activitiesCompanyDeadline').value = '';
+                        document.getElementById('activitiesCompanyPersonInCharge').value = '';
+
+                        document.getElementById('additional-fields').style.display = 'none';
                     }
 
                     if (response.data.message == 'final') {
@@ -139,6 +151,7 @@
                         const governancePracticeCompanyId = response.data.gov_prac_id;
 
                         const url = `/${companyId}/${domainId}/${governanceObjectId}/${governancePracticeCompanyId}/result`;
+                        alert(url);
                         window.location.href = url;
                     }
                 })

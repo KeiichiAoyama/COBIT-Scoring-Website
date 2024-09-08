@@ -5,7 +5,8 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <a href="{{ url()->previous() }}" class="btn btn-outline-primary">Back</a>
+                    <a href="{{ url('/' . $domainCompany->companyId) }}" class="btn btn-outline-primary">Back</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-primary">Home</a>
                 </div>
             </div>
             <div class="row mt-4">
@@ -15,6 +16,7 @@
                             <div class="d-sm-flex d-block align-items-center justify-content-between">
                                 <div class="mb-3 mb-sm-0">
                                     <div class="row">
+                                        <h3 class="fw-semibold text-start" style="margin-bottom: 40px;">Domain</h3>
                                         <div class="col-3 d-flex flex-column align-items-center">
                                             <img src="{{ asset('images/google.png')}}" alt="logo"
                                                 style="width: 100px" />
@@ -39,9 +41,8 @@
                                 <div class="mb-sm-0">
                                     @php
                                         $score = $domainCompany->domainCompanyScore;
-                                        $percentScore = $score * 100;
                                     @endphp
-                                    <div class="circle-utama">{{ number_format($percentScore, 2) }}%</div>
+                                    <div class="circle-utama">{{ number_format($score, 2) }}%</div>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +53,7 @@
                 <div class="row">
                     <div class="col-lg align-items-strech">
                         <a
-                            href="{{ url('/' . $domainCompany->companyId . '/' . $domainCompany . '/' . $govObjectCompany->governanceObjectId)}}">
+                            href="{{ url('/' . $domainCompany->companyId . '/' . $domainCompany->domainId . '/' . $govObjectCompany->governanceObjectId)}}">
                             <div class="card w-100">
                                 <div class="card-body">
                                     <div class="row d-flex align-items-center">

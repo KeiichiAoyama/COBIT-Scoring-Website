@@ -20,7 +20,10 @@
                                 <div class="mb-3 mb-sm-0">
                                     <div class="row">
                                         <div class="col text-center">
-                                            <img src="{{ asset('images/google.png')}}" alt="" style="width: 100px" />
+                                            @php
+                                                $img = ($userCompany->company->companyLogo) ? $userCompany->company->companyLogo : 'images/google.png';
+                                            @endphp
+                                            <img src="{{ asset($img)}}" alt="logo" style="width: 100px" />
                                             <h3 class="fw-semibold mt-1">Google Indonesia</h3>
                                         </div>
                                         <div class="col d-flex align-items-center">

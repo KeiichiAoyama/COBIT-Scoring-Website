@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\GovernanceObjectCompany;
 use App\Models\GovernancePracticeCompany;
 
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -48,12 +49,14 @@ class DashboardController extends Controller
     }
     public function addNewCompany(Request $request)
     {
+        Log::info($request);
+
         $validated = $request->validate([
             'companyName' => 'required|string|max:255',
             'companyIndustry' => 'required|string|max:255',
             'companyAddress' => 'required|string|max:255',
+            'companyLogo' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
-
 
         $user = auth()->user();
 
@@ -67,6 +70,11 @@ class DashboardController extends Controller
             $company->companyName = $validated['companyName'];
             $company->companyIndustry = $validated['companyIndustry'];
             $company->companyAddress = $validated['companyAddress'];
+
+            $imageName = time() . '.' . $validated['companyLogo']->extension();
+            $validated['companyLogo']->move(public_path('images'), $imageName);
+            $company->companyLogo = 'images/' . $imageName;
+
             $company->save();
         }
 

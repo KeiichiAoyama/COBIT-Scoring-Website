@@ -37,7 +37,8 @@
     "core-js": "^3.0.1",
     "lodash.debounce": "^4.0.8",
     "lodash.memoize": "^4.1.2",
-    "lodash.throttle": "^4.1.1"
+    "lodash.throttle": "^4.1.1",
+    "simplebar": "file:"
   },
   "devDependencies": {
     "css-loader": "^0.28.11",

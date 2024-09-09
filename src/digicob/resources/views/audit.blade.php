@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <a href="{{ url('/' . $governancePracticeCompany->companyId . '/' . $governancePracticeCompany->governanceObjectCompany->domainCompany->domainId . '/' . $governancePracticeCompany->governanceObjectCompany->governanceObjectId . '/' .  $governancePracticeCompany->governancePracticeId) }}"
+                    <a href="{{ url('/' . $governancePracticeCompany->companyId . '/' . $governancePracticeCompany->governanceObjectCompany->domainCompany->domainId . '/' . $governancePracticeCompany->governanceObjectCompany->governanceObjectId . '/' . $governancePracticeCompany->governancePracticeId) }}"
                         class="btn btn-outline-primary">Back</a>
                     <a href="{{ route('dashboard') }}" class="btn btn-outline-primary">Home</a>
                 </div>
@@ -18,7 +18,10 @@
                                 <div class="mb-3 mb-sm-0">
                                     <div class="row">
                                         <div class="col text-center">
-                                            <img src="{{ asset('images/google.png') }}" alt="" style="width: 100px" />
+                                            @php
+                                                $img = ($userCompany->company->companyLogo) ? $userCompany->company->companyLogo : 'images/google.png';
+                                            @endphp
+                                            <img src="{{ asset($img)}}" alt="logo" style="width: 100px" />
                                             <h3 class="fw-semibold mt-1">{{ $userCompany->company->companyName }}</h3>
                                         </div>
                                         <div class="col">

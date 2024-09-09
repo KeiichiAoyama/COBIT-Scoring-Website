@@ -17,7 +17,10 @@
                             <div class="d-sm-flex d-block align-items-center justify-content-between">
                                 <div class="row">
                                     <div class="col-2">
-                                        <img src="{{ asset('images/google.png')}}" alt="" style="width: 100px" />
+                                        @php
+                                            $img = ($userCompany->company->companyLogo) ? $userCompany->company->companyLogo : 'images/google.png';
+                                        @endphp
+                                        <img src="{{ asset($img)}}" alt="logo" style="width: 100px" />
                                         <h3 class="fw-semibold mt-1">{{ $userCompany->company->companyName }}</h3>
                                     </div>
                                     <div class="col">

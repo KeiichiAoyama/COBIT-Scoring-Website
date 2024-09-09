@@ -18,7 +18,10 @@
                                     <h3 class="fw-semibold text-start" style="margin-bottom: 40px;">Company</h3>
                                     <div class="row">
                                         <div class="col-3 d-flex flex-column align-items-center">
-                                            <img src="{{ asset('images/google.png')}}" alt="logo"
+                                            @php
+                                                $img = ($userCompany->company->companyLogo) ? $userCompany->company->companyLogo : 'images/google.png';
+                                            @endphp
+                                            <img src="{{ asset($img)}}" alt="logo"
                                                 style="width: 100px" />
                                             <h3 class="fw-semibold mt-1 text-center">
                                                 {{ $userCompany->company->companyName }}

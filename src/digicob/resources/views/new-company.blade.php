@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                             <!-- Card Company -->
-                            <form action="{{ route('addNewCompany')}}" method="POST">
+                            <form action="{{ route('addNewCompany')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <label class="form-label" for="companyName">Company Name</label>
                                 <input class="form-control" type="text" name="companyName" id="companyName" />
@@ -29,6 +29,8 @@
                                 <input class="form-control" type="text" name="companyIndustry" id="companyIndustry" />
                                 <label class="form-label" for="companyAddress">Company Address</label>
                                 <textarea class="form-control" name="companyAddress" id="companyAddress"></textarea>
+                                <label for="picture" class="form-label">Upload Logo</label>
+                                <input class="form-control" type="file" id="companyLogo" name="companyLogo" accept="image/*">
                                 <div class="row d-sm-flex d-block align-items-center justify-content-end mt-5">
                                     <div class="col-2">
                                         <button type="submit" class="btn btn-primary w-100">

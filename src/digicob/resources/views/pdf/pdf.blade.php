@@ -83,6 +83,13 @@
 
 <body>
 
+    @php
+        $activityCompany = $activityCompanies->first();
+        $governancePractice = $activityCompany->activities->governancePractice;
+        $governancePracticeCompany = $activityCompany->governancePracticeCompany;
+        $auditor = $activityCompany->user;
+    @endphp
+
     <div class="header">
         <h1>FORM KERJA AUDIT</h1>
 
@@ -93,7 +100,7 @@
             </tr>
             <tr>
                 <th>Standard/Kriteria:</th>
-                <td>COBIT 2019 - APO08.01 (Level 2)</td>
+                <td>COBIT 2019 - {{ $governancePractice->governancePracticeId }}</td>
             </tr>
             <tr>
                 <th>Lokasi:</th>
@@ -101,48 +108,84 @@
             </tr>
             <tr>
                 <th>Tanggal Audit:</th>
-                <td>16 Mei 2023</td>
+                <td>{{ \Carbon\Carbon::now()->format('d F Y') }}</td>
             </tr>
             <tr>
                 <th>Auditor:</th>
-                <td>Timotius Ammar Karo Karo</td>
+                <td>{{ $auditor->username }}</td>
             </tr>
         </table>
     </div>
 
-
-    <h2>Langkah Kerja</h2>
+    <h2>Activity Score</h2>
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>Uraian Langkah-langkah Kerja</th>
-                <th>Rating (1)</th>
+                <th>Activity Name</th>
+                <th>Rating</th>
             </tr>
         </thead>
         <tbody>
+            @foreach ($activityCompanies as $index => $activityCompany)
+                @if ($activityCompany->activities)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $activityCompany->activities->activitiesName }}</td>
+                        <td>{{ $activityCompany->activitiesCompanyScore }}</td>
+                    </tr>
+                @endif
+            @endforeach
+
             <tr>
-                <td>1</td>
-                <td>Mengenali pemangku kepentingan bisnis, minat mereka, dan bidang tanggung jawab mereka.</td>
-                <td>88.33</td>
+                <td colspan="2"><strong>Total Score</strong></td>
+                <td><strong>{{ $governancePracticeCompany->governancePracticeCompanyScore }}</strong></td>
             </tr>
+        </tbody>
+    </table>
+
+    <h2>Activity Details</h2>
+    <table>
+        <thead>
             <tr>
-                <td>2</td>
-                <td>Meninjau arah perusahaan saat ini, masalah, tujuan strategis, dan keselarasan dengan arsitektur
-                    perusahaan.</td>
-                <td>88.33</td>
+                <th>No</th>
+                <th>Type</th>
+                <th>Description</th>
             </tr>
-            <tr>
-                <td>3</td>
-                <td>Memahami lingkungan bisnis saat ini, kendala atau masalah proses, ekspansi atau kontraksi geografis,
-                    dan pendorong industri/peraturan.</td>
-                <td>85.83</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Mempertahankan kesadaran akan proses bisnis dan aktivitas terkait.</td>
-                <td>84.16</td>
-            </tr>
+        </thead>
+        <tbody>
+            @foreach ($activityCompanies as $index => $activityCompany)
+                <tr>
+                    <td rowspan="7">{{ $index + 1 }}</td>
+                    <td>Findings</td>
+                    <td>{{ $activityCompany->activitiesCompanyFindings ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Impact</td>
+                    <td>{{ $activityCompany->activitiesCompanyImpact ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Recommendations</td>
+                    <td>{{ $activityCompany->activitiesCompanyRecommendations ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Response</td>
+                    <td>{{ $activityCompany->activitiesCompanyResponse ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>{{ $activityCompany->activitiesCompanyStatus ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Deadline</td>
+                    <td>{{ $activityCompany->activitiesCompanyDeadline ? \Carbon\Carbon::parse($activityCompany->activitiesCompanyDeadline)->format('d F Y') : '-' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Person In Charge</td>
+                    <td>{{ $activityCompany->activitiesCompanyPersonInCharge ?? '-' }}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 

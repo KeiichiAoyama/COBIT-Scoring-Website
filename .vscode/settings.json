@@ -4,5 +4,8 @@
   "editor.formatOnSave": true,
   "[blade]": {
     "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "DEVSENSE.phptools-vscode"
   }
 }

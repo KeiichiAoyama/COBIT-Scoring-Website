@@ -8,8 +8,9 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GovernanceObjectController;
 use App\Http\Controllers\GovernancePracticeController;
+use App\Http\Controllers\PDFController;
 
-Route::redirect('/', '/dashboard')->name('dashboard');
+Route::redirect('/', '/pdf')->name('dashboard');
 
 Route::get('/home', function () {
     return view('new-company');
@@ -17,9 +18,13 @@ Route::get('/home', function () {
 
 Auth::routes(array(['register' => false, 'login' => false]));
 
-Route::middleware(['auth', 'verified'])->group(function() {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/pdf', [PDFController::class, 'generatePDF'])->name('pdf');
+
     Route::get('/dashboard/newCompany', [DashboardController::class, 'newCompany'])->name('newCompany');
+
     Route::post('/dashboard/newCompany/save', [DashboardController::class, 'addNewCompany'])->name('addNewCompany');
 
     Route::get('/{company_id}', [CompanyController::class, 'index'])->name('company_home');
@@ -37,7 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/{company_id}/{domain_id}/{gov_obj_id}/{gov_prac_id}/result', [AuditController::class, 'result'])->name('audit_result');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-require __DIR__.'/api.php';
-
+require __DIR__ . '/api.php';

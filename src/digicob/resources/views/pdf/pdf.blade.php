@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audit Report</title>
     <style>
@@ -14,8 +14,30 @@
         }
 
         @media print {
-            body {
-                margin: 20mm;
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            table,
+            th,
+            td {
+                border: 1px solid black;
+            }
+
+            th,
+            td {
+                padding: 8px;
+                text-align: left;
+            }
+
+            tr {
+                page-break-inside: avoid;
+            }
+
+            table {
+                page-break-after: auto;
             }
         }
 
@@ -38,12 +60,16 @@
         th,
         td {
             border: 1px solid black;
+            padding: 5px;
+            text-align: left;
         }
 
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
+        tr {
+            page-break-inside: avoid;
+        }
+
+        table {
+            page-break-after: auto;
         }
 
         .rating-table td {
@@ -156,38 +182,45 @@
         <tbody>
             @foreach ($activityCompanies as $index => $activityCompany)
                 <tr>
-                    <td rowspan="7">{{ $index + 1 }}</td>
+                    <td style="border-bottom: none;">{{ $index + 1 }}</td>
                     <td>Findings</td>
                     <td>{{ $activityCompany->activitiesCompanyFindings ?? '-' }}</td>
                 </tr>
                 <tr>
+                    <td style="border-top: none; border-bottom: none;"></td>
                     <td>Impact</td>
                     <td>{{ $activityCompany->activitiesCompanyImpact ?? '-' }}</td>
                 </tr>
                 <tr>
+                    <td style="border-top: none; border-bottom: none;"></td>
                     <td>Recommendations</td>
                     <td>{{ $activityCompany->activitiesCompanyRecommendations ?? '-' }}</td>
                 </tr>
                 <tr>
+                    <td style="border-top: none; border-bottom: none;"></td>
                     <td>Response</td>
                     <td>{{ $activityCompany->activitiesCompanyResponse ?? '-' }}</td>
                 </tr>
                 <tr>
+                    <td style="border-top: none; border-bottom: none;"></td>
                     <td>Status</td>
                     <td>{{ $activityCompany->activitiesCompanyStatus ?? '-' }}</td>
                 </tr>
                 <tr>
+                    <td style="border-top: none; border-bottom: none;"></td>
                     <td>Deadline</td>
                     <td>{{ $activityCompany->activitiesCompanyDeadline ? \Carbon\Carbon::parse($activityCompany->activitiesCompanyDeadline)->format('d F Y') : '-' }}
                     </td>
                 </tr>
                 <tr>
+                    <td style="border-top: none;"></td>
                     <td>Person In Charge</td>
                     <td>{{ $activityCompany->activitiesCompanyPersonInCharge ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
 
     <h2>Keterangan Pemberian Rating</h2>
     <table class="rating-table">

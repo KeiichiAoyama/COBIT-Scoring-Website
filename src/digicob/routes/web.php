@@ -21,7 +21,7 @@ Auth::routes(array(['register' => false, 'login' => false]));
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/pdf', [PDFController::class, 'generatePDF'])->name('pdf');
+    Route::post('/pdf', [PDFController::class, 'generatePDF'])->name('pdf');
 
     Route::get('/dashboard/newCompany', [DashboardController::class, 'newCompany'])->name('newCompany');
 
